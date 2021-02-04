@@ -64,6 +64,7 @@ Vagrant.configure("2") do |config|
   # information on available options.
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
+    vb.cpus = 1
   end
 
   # Enable provisioning with a shell script. Additional provisioners such as
@@ -82,11 +83,32 @@ Vagrant.configure("2") do |config|
 
     GITDIR="${HOME}/isucon10-qualify"
     rm -rf ${GITDIR}
-    git clone https://github.com/isucon/isucon10-qualify.git ${GITDIR}
+    git clone https://github.com/evr-nakamura/isucon10-qualify.git ${GITDIR}
     (
       cd ${GITDIR}/provisioning/ansible
       PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ansible-playbook -i allinone, --connection=local allinone.yaml
     )
     rm -rf ${GITDIR}
   SHELL
+  
+  # ベンチマーカー
+  config.vm.define :bench do |bench|
+    bench.vm.network :private_network, ip: "192.168.1.12", virtualbox__intnet: "isucon10-network"
+  end
+
+  # アプリ１
+  config.vm.define :app1 do |app|
+    app.vm.network :private_network, ip: "192.168.1.13", virtualbox__intnet: "isucon10-network"
+  end
+
+  # アプリ２
+  config.vm.define :app2 do |app|
+    app.vm.network :private_network, ip: "192.168.1.14", virtualbox__intnet: "isucon10-network"
+  end
+
+  # アプリ3
+  config.vm.define :app3 do |app|
+    app.vm.network :private_network, ip: "192.168.1.15", virtualbox__intnet: "isucon10-network"
+  end
+
 end
